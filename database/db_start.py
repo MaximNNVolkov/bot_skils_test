@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy import create_engine, PrimaryKeyConstraint, UniqueConstraint
-from sqlalchemy.engine.url import URL
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
@@ -18,6 +17,7 @@ class Users(DeclarativeBase):
     last_name = Column('last_name', String)
     user_name = Column('user_name', String)
     created_on = Column(DateTime(), default=datetime.now)
+    stoped_on = Column(DateTime(), default=None)
     admin = relationship('Admin', backref='user', uselist=False)
     post_id = relationship('Users_post', uselist=False)
 

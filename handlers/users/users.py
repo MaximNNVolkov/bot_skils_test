@@ -1,11 +1,10 @@
-from fsm import StateUser
+from fsm import RegistrationUser
 from aiogram import Dispatcher
-from defs import change_values
-from keyboards.inline import UserProducts
-
-
-cb_change_prod = UserProducts()
+from defs.users import change_department, change_name, change_s_name, change_l_name
 
 
 def register_user(dp: Dispatcher):
-    dp.register_callback_query_handler(change_values, cb_change_prod.cb.filter(), state=StateUser.change_sales)
+    dp.register_message_handler(change_department, state=RegistrationUser.enter_department)
+    dp.register_message_handler(change_name, state=RegistrationUser.enter_name)
+    dp.register_message_handler(change_s_name, state=RegistrationUser.enter_s_name)
+    dp.register_message_handler(change_l_name, state=RegistrationUser.enter_l_name)

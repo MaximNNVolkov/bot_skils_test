@@ -1,4 +1,5 @@
-from .users import StateUser
+from .users import RegistrationUser
 
 
-__all__ = ['StateUser']
+__all__ = ['RegistrationUser',
+           ]

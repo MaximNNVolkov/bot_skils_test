@@ -1,6 +1,10 @@
-from .user_sales import change_values
+from .register_user import start_registration, change_department, change_name, change_s_name, change_l_name
 
 
 __all__ = [
-           'change_values',
+    'start_registration',
+    'change_department',
+    'change_name',
+    'change_s_name',
+    'change_l_name',
            ]

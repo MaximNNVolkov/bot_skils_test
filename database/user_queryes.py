@@ -1,5 +1,5 @@
 import app_logger as loger
-from .db_start import db_conn, Users
+from .db_start import db_conn, Users, Users_post
 import time
 
 
@@ -28,3 +28,17 @@ def user_check(user):
     else:
         res = 'no_user'
     return res
+
+
+def add_register_user(user, d: dict):
+    log.info(
+        'Запрос на добавление нового пользователя зарегистрированного пользователя'
+        '{}, {}.'.format(user.info_user(), d))
+    up = Users_post(user_id=user.id,
+                    name=d['n'],
+                    l_name=d['l'],
+                    s_name=d['s']
+                    )
+    conn = db_conn()
+    conn.add(up)
+    conn.commit()

@@ -40,3 +40,27 @@ class User:
 
     def get_url(self):
         return ''.join(['<a href="', self.url, '">', self.first_name, '</a>'])
+
+
+class Register_User:
+    """Новый пользователь"""
+
+    def __init__(self, user):
+        self.user = user
+        self.name = ''
+        self.f_name = ''
+        self.l_name = ''
+
+    def add_user(self):
+        if self.find_user() == 'new_user':
+            add_user(self)
+            return 'new_user'
+        else:
+            return 'old_user'
+
+    def find_user(self):
+        res = user_check(self)
+        if res == 'no_user':
+            return 'new_user'
+        else:
+            return 'old_user'

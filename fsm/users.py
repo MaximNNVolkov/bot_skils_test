@@ -5,11 +5,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 log = logger.get_logger(__name__)
 
 
-class StateUser(StatesGroup):
-    enter_id = State()
-    enter_bch = State()
-    enter_sup = State()
-    enter_szdor = State()
-    check_sales = State()
-    change_sales = State()
-    changed_sales = State()
+class RegistrationUser(StatesGroup):
+    enter_department = State()
+    enter_name = State()
+    enter_l_name = State()
+    enter_s_name = State()

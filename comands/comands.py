@@ -4,6 +4,7 @@ from aiogram.utils import markdown as fmt
 from defs.classes import User
 from aiogram.dispatcher import FSMContext
 from keyboards import inline
+from defs.users import start_registration
 
 
 log = log.get_logger(__name__)
@@ -40,8 +41,8 @@ async def cmd_stop(message: types.Message, state: FSMContext):
 
 async def cmd_register(message: types.Message, state: FSMContext):
     u = User(message.from_user)
-    log.info('бот остановлен ' + u.info_user())
-    await state.reset_state(with_data=False)
+    log.info('регистрацция нового пользователя ' + u.info_user())
+    await start_registration(message, state)
 
 
 async def bot_block_error(message: types.Message):
