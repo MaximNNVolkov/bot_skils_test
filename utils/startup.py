@@ -9,8 +9,6 @@ log = loger.get_logger(__name__)
 async def set_default(dp: Dispatcher):
     # создаем меню
     res = await dp.bot.set_my_commands([
-        types.BotCommand("start", "Запустить бота"),
-        types.BotCommand('register', 'Зарегистрироваться'),
         types.BotCommand("help", "Помощь"),
     ])
     log.debug('commands set result {}'.format(res))

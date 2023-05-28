@@ -1,22 +1,20 @@
 import app_logger as log
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher import FSMContext
 from aiogram.utils import markdown as fmt
-from defs.classes import User
+from defs.classes import User, Register_User
 from fsm.users import RegistrationUser
 import re
-from database.user_queryes import add_register_user
 
 
 log = log.get_logger(__name__)
 
 
-async def start_registration(message: Message, state: FSMContext):
-    user = User(message.from_user)
-    log.info('start registration, пользователь: '.format(user.info_user()))
+async def start_registration(cb: CallbackQuery, state: FSMContext):
+    user = User(cb.from_user)
+    log.info('start registration, пользователь: {}'.format(user.info_user()))
     await state.set_state(RegistrationUser.enter_department)
-    await message.bot.delete_message(chat_id=user.id, message_id=message.message_id)
-    await message.answer(text=fmt.text(
+    await cb.message.answer(text=fmt.text(
         fmt.text(user.get_url(), ',', sep=''),
         fmt.text('Введите номер своего подразделения.'),
         fmt.text('Номер должен соответствовать шаблону: 0000/0000'),
@@ -38,7 +36,7 @@ async def change_department(message: Message, state: FSMContext):
             fmt.text('Введите Ваше имя.'),
             fmt.text('Имя необходимо указать кирилицей.'),
             sep='\n'))
-        await state.set_data(data={'name': text})
+        await state.set_data(data={'department': text})
     else:
         log.info('введенный текст НЕ соответствует маске {}'.format(text))
         await message.answer(text=fmt.text(
@@ -70,7 +68,7 @@ async def change_name(message: Message, state: FSMContext):
         log.info('введенный текст НЕ соответствует маске {}'.format(text))
         await message.answer(text=fmt.text(
             fmt.text(user.get_url(), ',', sep=''),
-            fmt.text('Имя необходимо указать кирилицей.'),
+            fmt.text('Необходимо указать только имя (без фамилии и отчества), используйте только кирилицу.'),
             sep='\n'))
 
 
@@ -117,7 +115,8 @@ async def change_l_name(message: Message, state: FSMContext):
             sep='\n'))
         d = await state.get_data()
         d['l'] = text.title()
-        add_register_user(user, d)
+        reg_user = Register_User(user)
+        reg_user.add_reg_user(d)
     else:
         log.info('введенный текст НЕ соответствует маске {}'.format(text))
         await message.answer(text=fmt.text(

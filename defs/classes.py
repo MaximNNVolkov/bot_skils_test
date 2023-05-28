@@ -1,4 +1,4 @@
-from database import add_user, user_check
+from database import add_user, user_check, add_register_user, find_register_user
 import configparser
 
 
@@ -16,6 +16,7 @@ class User:
         self.last_name = user.last_name
         self.url = user.url
         self.add_user()
+
 
     def add_user(self):
         if self.find_user() == 'new_user':
@@ -42,24 +43,21 @@ class User:
         return ''.join(['<a href="', self.url, '">', self.first_name, '</a>'])
 
 
-class Register_User:
+class Register_User(User):
     """Новый пользователь"""
 
     def __init__(self, user):
         self.user = user
-        self.name = ''
-        self.f_name = ''
-        self.l_name = ''
 
-    def add_user(self):
-        if self.find_user() == 'new_user':
-            add_user(self)
+    def add_reg_user(self, d: dict):
+        if self.find_reg_user() == 'new_user':
+            add_register_user(self, d=d)
             return 'new_user'
         else:
             return 'old_user'
 
-    def find_user(self):
-        res = user_check(self)
+    def find_reg_user(self):
+        res = find_register_user(self)
         if res == 'no_user':
             return 'new_user'
         else:

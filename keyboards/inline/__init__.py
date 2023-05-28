@@ -1,1 +1,1 @@
-from .user import UsersOkCancel, UserProducts
+from .user import UsersOkCancel, UsersMenu, AdminsMenu

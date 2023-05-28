@@ -1,49 +1,65 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index
+from sqlalchemy import create_engine, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 
+db_type = 'sqlite'
+db = 'skils_test_bot.db'
 
-engine = create_engine('sqlite:///sqlite3.db')
+engine = create_engine(f'{db_type}:///{db}')
 DeclarativeBase = declarative_base()
+
+
+def db_conn():
+    engine = create_engine(f'{db_type}:///{db}')
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
 
 
 class Users(DeclarativeBase):
     __tablename__ = 'users'
 
     user_id = Column(Integer, primary_key=True)
-    first_name = Column('first_name', String)
-    last_name = Column('last_name', String)
-    user_name = Column('user_name', String)
+    referal = Column(String, default=None)
+    first_name = Column(String)
+    last_name = Column(String)
+    user_name = Column(String)
     created_on = Column(DateTime(), default=datetime.now)
     stoped_on = Column(DateTime(), default=None)
-    admin = relationship('Admin', backref='user', uselist=False)
-    post_id = relationship('Users_post', uselist=False)
 
 
 class Users_post(DeclarativeBase):
     __tablename__ = 'users_post'
 
-    user_id = Column('user_id', Integer, ForeignKey('users.user_id'), primary_key=True)
-    name = Column('name', String)
-    l_name = Column('l_name', String)
-    s_name = Column('s_name', String)
+    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    department = Column(String)
+    name = Column(String)
+    l_name = Column(String)
+    s_name = Column(String)
     created_on = Column(DateTime(), default=datetime.now)
 
 
 class Admin(DeclarativeBase):
     __tablename__ = 'admin'
 
-    user_id = Column('user_id', Integer, ForeignKey('users.user_id'), primary_key=True)
-    role = Column('role', String)
-    referer = Column('referer', Integer)
+    user_id = Column(Integer, ForeignKey(Users.user_id), primary_key=True)
+    role = Column(String)
     created_on = Column(DateTime(), default=datetime.now)
+    refer_code = Column(String)
 
 
-def db_conn():
-    engine = create_engine('sqlite:///sqlite3.db')
-    DeclarativeBase.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    return session
+class Survey(DeclarativeBase):
+    __tablename__ = 'survey'
+
+    id_survey = Column(Integer, primary_key=True)
+
+
+admin_survey = Table('admin_survey', DeclarativeBase.metadata,
+                     Column('admin_id', Integer(), ForeignKey(Admin.user_id)),
+                     Column('survey_id', Integer(), ForeignKey(Survey.id_survey))
+                     )
+
+
+DeclarativeBase.metadata.create_all(engine)
