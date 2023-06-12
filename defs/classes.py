@@ -1,9 +1,5 @@
 from database import add_user, user_check, add_register_user, find_register_user
-import configparser
-
-
-config = configparser.ConfigParser()
-config.read("config.ini")
+from aiogram.utils import markdown as fmt
 
 
 class User:
@@ -40,7 +36,7 @@ class User:
             self.url)
 
     def get_url(self):
-        return ''.join(['<a href="', self.url, '">', self.first_name, '</a>'])
+        return fmt.hlink(self.first_name, self.url)
 
 
 class Register_User(User):

@@ -1,27 +1,17 @@
 import app_logger as loger
-from .db_start import db_conn, Users, Users_post, Admin
-from sqlalchemy import sql
+from .db_start import db_conn, Users, Users_post, add_record, Admin
 
 
 log = loger.get_logger(__name__)
 
 
 def add_user(user):
-    log.info(
-        'Запрос на добавление нового пользователя с '
-        '{} {}'.format(user.info_user(), user.referal))
-    if user.referal == '':
-        u = Users(user_id=user.id,
-                  first_name=user.first_name,
-                  last_name=user.last_name,
-                  user_name=user.username)
-        a = Admin(
-            user_id=user.id,
-            role='Admin',
-        )
-    conn = db_conn()
-    conn.add(u)
-    conn.commit()
+    log.info(f'Запрос на добавление нового пользователя с {user.info_user()}')
+    u = Users(user_id=user.id,
+              first_name=user.first_name,
+              last_name=user.last_name,
+              user_name=user.username)
+    add_record(u)
 
 
 def user_check(user):
@@ -40,14 +30,12 @@ def add_register_user(reg_user, d: dict):
         'Запрос на добавление нового пользователя зарегистрированного пользователя'
         '{}, {}.'.format(reg_user.user.info_user(), d))
     up = Users_post(user_id=reg_user.user.id,
-                    department = d['department'],
+                    department=d['department'],
                     name=d['n'],
                     l_name=d['l'],
                     s_name=d['s']
                     )
-    conn = db_conn()
-    conn.add(up)
-    conn.commit()
+    add_record(up)
 
 
 def find_register_user(reg_user):
@@ -59,3 +47,13 @@ def find_register_user(reg_user):
     else:
         res = 'no_user'
     return res
+
+
+def add_user_group(user_id, referal: str):
+    log.info(f'добавление пользователя {user_id} в группу {referal}')
+    conn = db_conn()
+    admin = conn.query(Admin).filter(Admin.ref_code == referal).one()
+    user = conn.query(Users).filter(Users.user_id == user_id).one()
+    admin.users.append(user)
+    conn.commit()
+    conn.close()

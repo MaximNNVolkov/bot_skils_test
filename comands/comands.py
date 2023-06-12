@@ -6,12 +6,13 @@ from aiogram.dispatcher import FSMContext
 from keyboards import inline
 from comands.сmd_start_proc import cmd_start_proc
 
+
 log = log.get_logger(__name__)
 
 
 async def cmd_start(message: types.Message, state: FSMContext):
     user = await cmd_start_proc(message, state)
-    log.info('кнопка старт. ' + user.info_user())
+    log.info(f'кнопка старт. {user.info_user()}')
 
 
 async def cmd_help(message: types.Message, state: FSMContext):

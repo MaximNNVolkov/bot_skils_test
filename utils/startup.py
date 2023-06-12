@@ -11,7 +11,7 @@ async def set_default(dp: Dispatcher):
     res = await dp.bot.set_my_commands([
         types.BotCommand("help", "Помощь"),
     ])
-    log.debug('commands set result {}'.format(res))
+    log.debug(f'commands set result {res}')
     dp.bot.parse_mode = 'HTML'
     # регистрируем handlers
     register_commands(dp=dp)
