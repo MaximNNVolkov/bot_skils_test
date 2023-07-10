@@ -4,10 +4,29 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils import markdown as fmt
 from defs.classes import User, Register_User
 from fsm.users import RegistrationUser
+from database.user_queryes import find_register_user
 import re
 
 
 log = log.get_logger(__name__)
+
+
+async def registration_user(cb: CallbackQuery, state: FSMContext):
+    user = User(cb.from_user)
+    log.info(f'нажата кнопка регистрция, пользователь: {user.info_user()}')
+    post = find_register_user(user.id)
+    print(post)
+    if post:
+        await cb.message.answer(text=fmt.text(
+            fmt.text(user.get_url(), ',', sep=''),
+            fmt.text('Вы уже прошли регистрацию.'),
+            fmt.text(f'Департамент - {post.department}'),
+            fmt.text(f'Имя - {post.name}'),
+            fmt.text(f'Буква фамилии - {post.l_name}'),
+            fmt.text(f'Буква отчества - {post.s_name}'),
+            sep='\n'))
+    else:
+        await start_registration(cb=cb, state=state)
 
 
 async def start_registration(cb: CallbackQuery, state: FSMContext):

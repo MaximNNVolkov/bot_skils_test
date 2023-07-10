@@ -46,15 +46,16 @@ class Register_User(User):
         self.user = user
 
     def add_reg_user(self, d: dict):
-        if self.find_reg_user() == 'new_user':
-            add_register_user(self, d=d)
-            return 'new_user'
+        post = self.find_reg_user()
+        if post:
+            return post
         else:
-            return 'old_user'
+            add_register_user(self, d=d)
+            return False
 
     def find_reg_user(self):
-        res = find_register_user(self)
-        if res == 'no_user':
-            return 'new_user'
+        res = find_register_user(self.user.id)
+        if res:
+            return res
         else:
-            return 'old_user'
+            return False

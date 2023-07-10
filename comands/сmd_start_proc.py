@@ -25,6 +25,7 @@ async def __msg_user__(msg, state, user, args):
                                              sep='\n'),
                                reply_markup=inline.UsersMenu.create_kb())
 
+
 async def __msg_admin__(msg, state, user):
     await __clean_msg__(msg, state, )
     link = await get_start_link(str(user.username), encode=True)

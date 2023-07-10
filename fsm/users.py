@@ -6,6 +6,7 @@ log = logger.get_logger(__name__)
 
 
 class RegistrationUser(StatesGroup):
+    registration_start = State()
     enter_department = State()
     enter_name = State()
     enter_l_name = State()

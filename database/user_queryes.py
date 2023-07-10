@@ -1,6 +1,6 @@
 import app_logger as loger
 from .db_start import db_conn, Users, Users_post, add_record, Admin
-
+from utils.bot_errors import UserNotFound
 
 log = loger.get_logger(__name__)
 
@@ -29,31 +29,37 @@ def add_register_user(reg_user, d: dict):
     log.info(
         'Запрос на добавление нового пользователя зарегистрированного пользователя'
         '{}, {}.'.format(reg_user.user.info_user(), d))
-    up = Users_post(user_id=reg_user.user.id,
+    con = db_conn()
+    user = con.query(Users).filter(Users.user_id == reg_user.user.id).one()
+    post = Users_post(user_id=reg_user.user.id,
                     department=d['department'],
                     name=d['n'],
                     l_name=d['l'],
                     s_name=d['s']
                     )
-    add_record(up)
+    user.post = post
+    con.commit()
+    con.close()
 
 
-def find_register_user(reg_user):
-    log.info(f'Запрос на поиск регитрации для юзера {reg_user.user.id}')
-    conn = db_conn()
-    s = conn.query(Users_post.user_id).filter(Users_post.user_id == reg_user.user.id).all()
-    if len(s) > 0:
-        res = 'ok_user'
+def find_register_user(user_id):
+    log.info(f'Запрос на поиск регитрации для юзера {user_id}')
+    con = db_conn()
+    user = con.query(Users).filter(Users.user_id == user_id).one_or_none()
+    if user:
+        if user.post:
+            return user.post
+        else:
+            return False
     else:
-        res = 'no_user'
-    return res
+        raise UserNotFound(f'User id {user_id}, not found in table {Users.__tablename__}')
 
 
 def add_user_group(user_id, referal: str):
     log.info(f'добавление пользователя {user_id} в группу {referal}')
-    conn = db_conn()
-    admin = conn.query(Admin).filter(Admin.ref_code == referal).one()
-    user = conn.query(Users).filter(Users.user_id == user_id).one()
+    con = db_conn()
+    admin = con.query(Admin).filter(Admin.ref_code == referal).one()
+    user = con.query(Users).filter(Users.user_id == user_id).one()
     admin.users.append(user)
-    conn.commit()
-    conn.close()
+    con.commit()
+    con.close()
