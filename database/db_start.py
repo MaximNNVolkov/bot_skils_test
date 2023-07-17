@@ -37,10 +37,6 @@ user_survey = Table('user_survey', DeclarativeBase.metadata,
                    )
 
 
-# admin_survey = Table('admin_survey', DeclarativeBase.metadata,
-#                    Column('admin_id', Integer, ForeignKey('admin.user_id')),
-#                    Column('survey_id', Integer, ForeignKey('survey.survey_id'))
-#                    )
 
 class Users(DeclarativeBase):
     __tablename__ = 'users'
@@ -81,29 +77,30 @@ class Admin(DeclarativeBase):
 class Survey(DeclarativeBase):
     __tablename__ = 'survey'
 
-    survey_id = Column(Integer, primary_key=True)
+    survey_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
     users = relationship("Users", secondary=user_survey, back_populates="survey")
     admin = Column("Admin", ForeignKey(Admin.user_id))
-    qustions = relationship("Questions")
+    tests = relationship("Tests")
 
 
-class Questions(DeclarativeBase):
-    __tablename__ = 'questions'
+class Tests(DeclarativeBase):
+    __tablename__ = 'tests'
 
-    question_id = Column(Integer, primary_key=True)
-    text = Column(String)
-    variants = relationship("Variants")
+    test_id = Column(Integer, primary_key=True, autoincrement=True)
+    question = Column(String)
+    options = relationship("Options")
+    correct_option_id = Column(Integer)
     survey = Column("Survey", ForeignKey('survey.survey_id'))
 
 
-class Variants(DeclarativeBase):
-    __tablename__ = 'variants'
+class Options(DeclarativeBase):
+    __tablename__ = 'options'
 
-    id_variant = Column(Integer, primary_key=True)
+    id_variant = Column(Integer, primary_key=True, autoincrement=True)
     text = Column(String)
-    is_true = Column(Boolean)
-    question = Column("Questions", ForeignKey('questions.question_id'))
+    # is_correct = Column(Boolean)
+    tests = Column("Tests", ForeignKey('tests.test_id'))
 
 
 def add_record(rec):

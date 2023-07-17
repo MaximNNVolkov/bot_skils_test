@@ -18,7 +18,7 @@ async def poll_change(cb: CallbackQuery, state: FSMContext):
                                    protect_content=True,
                                    is_anonymous=False
                                    )
-    state.set_data(poll = pol.message_id)
+    state.set_data(poll=pol.message_id)
     print(pol)
 
 

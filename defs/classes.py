@@ -1,18 +1,18 @@
 from database import add_user, user_check, add_register_user, find_register_user
 from aiogram.utils import markdown as fmt
+from typing import List
 
 
 class User:
     """Новый пользователь"""
 
     def __init__(self, user):
-        self.id = user.id
-        self.username = user.username
-        self.first_name = user.first_name
-        self.last_name = user.last_name
-        self.url = user.url
+        self.id: int = user.id
+        self.username: str = user.username
+        self.first_name: str = user.first_name
+        self.last_name: str = user.last_name
+        self.url: str = user.url
         self.add_user()
-
 
     def add_user(self):
         if self.find_user() == 'new_user':
@@ -59,3 +59,17 @@ class Register_User(User):
             return res
         else:
             return False
+
+
+class Poll:
+    type: str = "poll"
+
+    def __init__(self, question, options, correct_option_id):
+        self.question: str = question  # Текст вопроса
+        self.options: List[str] = [*options] # "Распакованное" содержимое массива m_options в массив options
+        self.correct_option_id: int = correct_option_id  # ID правильного ответа
+        self.chat_id: int = 0  # Чат, в котором опубликована викторина
+        self.message_id: int = 0  # Сообщение с викториной (для закрытия)
+
+    def add(self):
+        return 1

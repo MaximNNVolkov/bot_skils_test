@@ -18,11 +18,19 @@ def user_check(user):
     log.info('Запрос на поиск пользователя {}.'.format(user.id))
     conn = db_conn()
     s = conn.query(Users.user_id).filter(Users.user_id == user.id).all()
+    conn.close()
     if len(s) > 0:
         res = 'ok_user'
     else:
         res = 'no_user'
     return res
+
+
+def admin_check(user):
+    log.info(f'Запрос на поиск админа {user.id}.')
+    conn = db_conn()
+    u = conn.query(Admin).filter(Admin.user_id == user.id).one_or_none()
+    return u
 
 
 def add_register_user(reg_user, d: dict):

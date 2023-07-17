@@ -24,7 +24,8 @@ async def admin_gen_ref(message: types.Message, state: FSMContext):
                                    )
 
 
-def admin_surveys_list(message: types.Message, state: FSMContext):
+async def admin_surveys_list(message: types.Message, state: FSMContext):
     u = User(message.from_user)
     log.info('Кнопка admin_surveys_list, {}'.format(u.info_user()))
-    my_survives(u)
+    s = my_survives(u)
+    await message.bot.send_message(chat_id=u.id, text=s)
