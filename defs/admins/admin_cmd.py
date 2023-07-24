@@ -5,6 +5,7 @@ from aiogram.utils import markdown as fmt
 from defs.classes import User
 from aiogram.utils.deep_linking import get_start_link
 from database.admin_queryes import my_survives
+from keyboards.inline.admin import MyPolls
 
 
 log = loger.get_logger(__name__)
@@ -28,4 +29,5 @@ async def admin_surveys_list(message: types.Message, state: FSMContext):
     u = User(message.from_user)
     log.info('Кнопка admin_surveys_list, {}'.format(u.info_user()))
     s = my_survives(u)
-    await message.bot.send_message(chat_id=u.id, text=s)
+    await message.bot.send_message(chat_id=u.id, text=fmt.text('Список Ваших тестов'),
+                                   reply_markup=MyPolls().show_polls(polls=s))

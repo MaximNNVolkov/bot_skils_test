@@ -38,7 +38,7 @@ async def enter_poll(message: Message, state: FSMContext):
     await message.answer(text=fmt.text(
         fmt.text('Заполните вопрос'),
         sep='\n'),
-        reply_markup=PollMenu.create())
+        reply_markup=PollMenu().create())
     await state.set_state(CreateTest.enter_poll)
 
 

@@ -82,3 +82,14 @@ def add_options(test_id: int, options: list):
             test.options.append(o)
             conn.commit()
     conn.close()
+
+
+def get_survey(id: int):
+    log.info(f'получение информации об опросе - {id}')
+    conn = db_conn()
+    surv = conn.query(Survey).filter(Survey.survey_id == id).one_or_none()
+    if surv.tests:
+        res = surv.tests
+    else:
+        res = 'No surveys'
+    return res

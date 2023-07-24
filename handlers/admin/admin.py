@@ -1,6 +1,8 @@
 from aiogram import types, Dispatcher
 from defs.admins.admin_cmd import admin_gen_ref, admin_surveys_list
 from defs.admins.create_poll import admin_create_new_test, enter_poll, save_poll, poll_complete
+from defs.admins.poll_detail import poll_detail
+from keyboards.inline.admin import MyPolls
 from fsm.admin import CreateTest
 
 
@@ -12,4 +14,5 @@ def register_admin(dp: Dispatcher):
     dp.register_callback_query_handler(admin_create_new_test, text='AdminNewTest', state='*')
     dp.register_message_handler(enter_poll, state=CreateTest.enter_name)
     dp.register_message_handler(save_poll, content_types=['poll'], state=CreateTest.enter_poll)
+    dp.register_callback_query_handler(poll_detail, MyPolls().cb.filter(), state='*')
 
