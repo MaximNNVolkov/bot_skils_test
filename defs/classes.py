@@ -64,12 +64,9 @@ class Register_User(User):
 class Poll:
     type: str = "poll"
 
-    def __init__(self, question, options, correct_option_id):
+    def __init__(self, question, options, correct_option_id, chat_id: int = 0, message_id: int = 0):
         self.question: str = question  # Текст вопроса
         self.options: List[str] = [*options] # "Распакованное" содержимое массива m_options в массив options
-        self.correct_option_id: int = correct_option_id  # ID правильного ответа
-        self.chat_id: int = 0  # Чат, в котором опубликована викторина
-        self.message_id: int = 0  # Сообщение с викториной (для закрытия)
-
-    def add(self):
-        return 1
+        self.correct_option_id: int = correct_option_id # ID правильного ответа
+        self.chat_id: int = chat_id # Чат, в котором опубликована викторина
+        self.message_id: int = message_id # Сообщение с викториной (для закрытия)

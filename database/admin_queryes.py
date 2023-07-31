@@ -34,7 +34,6 @@ def add_admin(user, ref_code: str):
         return 'admin added'
 
 
-
 def my_survives(user):
     log.info(f'поиск опросов , {user.info_user()}')
     conn = db_conn()
@@ -43,6 +42,17 @@ def my_survives(user):
         res = [{'id': s.survey_id, 'name': s.name} for s in admin.surveys]
     else:
         res = 'No surveys'
+    return res
+
+
+def my_users(user):
+    log.info(f'поиск зарегистрированных пользователей , {user.info_user()}')
+    conn = db_conn()
+    admin = conn.query(Admin).filter(Admin.user_id == user.id).one_or_none()
+    if admin.users:
+        res = [s.user_id for s in admin.users if s.post != None]
+    else:
+        res = 'No users'
     return res
 
 

@@ -29,6 +29,7 @@ class UsersMenu:
 
 class AdminsMenu:
 
+    @staticmethod
     def create_kb():
         kb = InlineKeyboardMarkup()
         kb.row_width = 2

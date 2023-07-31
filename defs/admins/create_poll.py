@@ -7,6 +7,7 @@ from database.user_queryes import admin_check
 from database.admin_queryes import add_survey, test_add
 from fsm.admin import CreateTest
 from keyboards.inline.admin import PollMenu
+from keyboards.inline.user import AdminsMenu
 
 
 log = loger.get_logger(__name__)
@@ -57,13 +58,14 @@ async def save_poll(message: Message, state: FSMContext):
 
 async def poll_complete(message: Message, state: FSMContext):
     user = User(message.from_user)
-    log.info(f'пользователь pаершил добавление опросов: {user.info_user()}')
+    log.info(f'пользователь завершил добавление опросов: {user.info_user()}')
     await message.bot.delete_message(chat_id=user.id, message_id=message.message_id)
-    await message.answer(text=fmt.text(
+    msg = await message.answer(text=fmt.text(
         fmt.text('Ваш опрос успешно сохранен'),
         fmt.text('все Ваши опросы вы можете найти в разделе Мои опросы'),
         sep='\n'),
         reply_markup=ReplyKeyboardRemove())
+    await message.answer(text='Что дальше?', reply_markup=AdminsMenu.create_kb())
     d = await state.get_data()
     for poll in d['polls']:
         test_add(d['survey_id'], poll)
